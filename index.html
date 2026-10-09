@@ -5,21 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chapter Clarity — Readability checker</title>
 <meta name="description" content="A free, private chapter readability checker that highlights five sentences worth revising.">
-<style>
-:root{--ink:#172033;--muted:#667085;--paper:#f6f8fc;--card:#fff;--line:#e6eaf1;--accent:#635bff;--accent-dark:#4f46e5;--accent2:#eeefff;--warm:#fff8eb;--shadow:0 24px 70px rgba(31,41,72,.09)}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#e9e6ff 0,transparent 27%),radial-gradient(circle at 92% 10%,#e4f9f5 0,transparent 24%),var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
-header{max-width:1180px;margin:auto;padding:24px 28px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.045em;font-size:20px}.mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#7c74ff,var(--accent-dark));color:white;display:grid;place-items:center;font-family:Georgia,serif;font-size:21px;box-shadow:0 8px 18px rgba(99,91,255,.25)}.nav{display:flex;align-items:center;gap:20px}.nav a{font-size:12px;color:var(--muted);text-decoration:none}.pill{font-size:11px;font-weight:750;border:1px solid #dcdcff;border-radius:99px;padding:8px 12px;color:var(--accent-dark);background:#fff}
-main{max-width:1180px;margin:0 auto;padding:42px 28px 72px}.hero{max-width:820px;margin:0 auto 46px;text-align:center}.eyebrow{display:inline-flex;align-items:center;gap:7px;color:var(--accent-dark);font-size:11px;text-transform:uppercase;letter-spacing:.17em;font-weight:800;background:rgba(255,255,255,.7);border:1px solid #dcdcff;border-radius:99px;padding:7px 12px;box-shadow:0 7px 20px rgba(99,91,255,.08)}.eyebrow:before{content:"";width:6px;height:6px;border-radius:50%;background:#7c74ff;box-shadow:0 0 0 4px #dcdcff}.hero h1{font-weight:780;letter-spacing:-.07em;line-height:1.01;font-size:clamp(42px,6vw,74px);margin:18px 0 16px}.hero h1 br{display:block}.hero p{color:var(--muted);font-size:17px;line-height:1.7;margin:0 auto;max-width:640px}.hero-meta{display:flex;justify-content:center;gap:26px;margin-top:23px;color:#7a8497;font-size:11px;font-weight:650}.hero-meta span{display:inline-flex;align-items:center;gap:7px}.hero-meta span:before{content:"✓";display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#e8f8f1;color:#159570;font-size:11px;font-weight:900}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}.panel{background:rgba(255,255,255,.93);border:1px solid rgba(218,223,235,.95);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#fff,#fbfcff)}.panel-head h2{font-size:13px;margin:0;letter-spacing:.01em;font-weight:800}.panel-head h2:first-letter{color:var(--accent)}.subtle{font-size:11px;color:var(--muted)}.editor-wrap{padding:20px 22px 22px}
-textarea{width:100%;min-height:350px;resize:vertical;border:0;outline:none;font:16px/1.9 Georgia,"Times New Roman",serif;color:#30384a;background:transparent}textarea::placeholder{color:#aeb5c3}.editor-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;margin-top:14px}.count{font-size:11px;color:var(--muted)}
-button{border:0;border-radius:10px;background:linear-gradient(135deg,#716aff,var(--accent-dark));color:white;padding:12px 17px;font-weight:750;font-size:12px;cursor:pointer;box-shadow:0 8px 16px rgba(99,91,255,.19);transition:transform .15s,box-shadow .15s,opacity .15s}button:hover{transform:translateY(-2px);box-shadow:0 12px 22px rgba(99,91,255,.25)}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}.secondary:hover{box-shadow:0 6px 16px rgba(31,41,72,.08)}
-.results{padding:22px}.empty{min-height:390px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);padding:28px}.empty-inner{max-width:280px}.empty-icon{font-size:31px;margin-bottom:13px;color:var(--accent)}.empty h3{color:var(--ink);font-size:17px;margin:0 0 7px;letter-spacing:-.02em}.empty p{font-size:13px;line-height:1.65;margin:0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:17px}.stat{border:1px solid var(--line);border-radius:15px;padding:16px;background:linear-gradient(145deg,#fff,#fafaff)}.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800}.stat-value{font-size:31px;font-weight:800;letter-spacing:-.06em;margin-top:6px}.stat-note{font-size:11px;color:var(--muted)}
-.meter{height:7px;background:#eceef6;border-radius:10px;margin-top:10px;overflow:hidden}.meter span{height:100%;display:block;width:0;background:linear-gradient(90deg,#8b85ff,var(--accent));border-radius:10px}
-.band{font-size:11px;font-weight:750;background:var(--accent2);color:var(--accent-dark);padding:8px 11px;border-radius:9px;display:inline-block;margin-bottom:20px}.section-title{font-size:12px;font-weight:800;margin:2px 0 11px;display:flex;justify-content:space-between}.sentence-list{display:flex;flex-direction:column;gap:9px}.sentence{padding:13px 14px;border:1px solid #f1e5c9;background:var(--warm);border-radius:13px}.sentence-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:5px}.sentence-num{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#946319}.sentence-score{font-size:10px;color:#946319;background:#ffedc4;border-radius:20px;padding:3px 7px;white-space:nowrap}.sentence p{font:14px/1.65 Georgia,"Times New Roman",serif;margin:0}.sentence small{display:block;color:#8a6a35;font-size:11px;margin-top:7px}
-.preview{margin-top:22px}.preview-box{padding:17px;border:1px solid var(--line);border-radius:14px;background:#fbfcff;font:15px/1.9 Georgia,"Times New Roman",serif;white-space:pre-wrap;overflow-wrap:anywhere}.preview-box mark{background:#e4e1ff;color:#4338ca;border-radius:3px;padding:1px 0}
-.note{font-size:11px;line-height:1.6;color:var(--muted);margin:14px 2px 0}.bottom{margin-top:25px;text-align:center;font-size:12px;color:var(--muted)}.bottom strong{color:var(--accent-dark)}
-@media(max-width:780px){.workspace{grid-template-columns:1fr}.hero{margin-top:10px}.hero h1 br{display:block}.hero-meta{gap:12px;flex-wrap:wrap}.editor-wrap textarea{min-height:260px}.empty{min-height:220px}header{padding:20px}.nav{display:none}.pill{display:none}main{padding:24px 16px 56px}.editor-footer{align-items:flex-end;flex-direction:column}.editor-footer>div{width:100%;justify-content:flex-end}.panel-head{padding:16px}.results{padding:18px}}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header><div class="brand"><span class="mark">C</span> chapter clarity</div><nav class="nav"><a href="#workspace">How it works</a><a href="#report">Readability report</a><span class="pill">Free · Private · No sign-up</span></nav></header>
@@ -40,88 +26,6 @@ button{border:0;border-radius:10px;background:linear-gradient(135deg,#716aff,var
 </section>
 <div class="bottom">Built for writers, not algorithms. <strong>Use the score as a signal, not a rule.</strong></div>
 </main>
-<script>
-const $ = id => document.getElementById(id);
-const input = $('chapter');
-const sample = `Mara had always believed that the house remembered everything. The staircase creaked in the same place where her father had paused to listen for the storm, and the kitchen window still refused to close unless someone lifted it with both hands. On the morning she decided to leave, the sky was the colour of old paper.
-
-Although she had rehearsed the conversation dozens of times, she found herself unable to explain why the decision, which had seemed perfectly reasonable in the quiet of her bedroom, became almost impossible to articulate when her brother finally appeared in the doorway. He looked at the suitcase, then at her, and waited.
-
-“I'll write,” she said.
-
-It was not a promise either of them believed. Outside, a bus sighed at the corner, releasing a handful of passengers into the rain. Mara picked up the key, considered the weight of it in her palm, and placed it carefully on the table beside the untouched cup of tea.`;
-function sentencesOf(text){
-  return (text.replace(/\s+/g,' ').match(/[^.!?]+[.!?]+["'”’)]*|[^.!?]+$/g)||[]).map(s=>s.trim()).filter(Boolean);
-}
-function wordsOf(text){return text.match(/\b[\w’'-]+\b/g)||[]}
-function syllables(word){
-  let w=word.toLowerCase().replace(/[^a-z]/g,''); if(!w) return 1;
-  if(w.length<=3) return 1;
-  w=w.replace(/(?:[^laeiouy]es|[^laeiouy]ed|[^laeiouy]e)$/,'').replace(/^y/,'');
-  const m=w.match(/[aeiouy]{1,2}/g); return Math.max(1,m?m.length:1);
-}
-function countSyllables(words){return words.reduce((n,w)=>n+syllables(w),0)}
-function flesch(words,sentences){
-  if(!words.length||!sentences.length)return null;
-  const syll=countSyllables(words);
-  return 206.835-1.015*(words.length/sentences.length)-84.6*(syll/words.length);
-}
-function gradeLevel(words,sentences){
- if(!words.length||!sentences.length)return null;
- return 0.39*(words.length/sentences.length)+11.8*(countSyllables(words)/words.length)-15.59;
-}
-function complexity(sentence){
- const words=wordsOf(sentence), n=Math.max(words.length,1), syll=countSyllables(words);
- const long=words.filter(w=>syllables(w)>=3).length;
- const connectors=(sentence.match(/\b(although|because|while|whereas|which|that|who|whom|whose|unless|until|despite|therefore|however|nevertheless|if|when|whenever|since|after|before|as though|even though)\b/gi)||[]).length;
- const punctuation=(sentence.match(/[;:—–(),]/g)||[]).length;
- const passive=(sentence.match(/\b(am|is|are|was|were|be|been|being)\s+\w+(ed|en)\b/gi)||[]).length;
- const score=Math.round((n*0.55)+(long*2.4)+(connectors*2.8)+(punctuation*0.8)+(passive*1.6));
- const reasons=[];
- if(n>=24) reasons.push(`${n} words`);
- if(long>=3) reasons.push(`${long} long words`);
- if(connectors>=2) reasons.push(`${connectors} linking clauses`);
- if(punctuation>=3) reasons.push('dense punctuation');
- if(passive) reasons.push('possible passive phrasing');
- return {sentence,score,words:n,reasons:reasons.length?reasons:['overall sentence structure']};
-}
-function level(score){
- if(score>=90)return ['Very easy','Easy for most readers'];
- if(score>=80)return ['Easy','Comfortable to read'];
- if(score>=70)return ['Fairly easy','Clear for most adult readers'];
- if(score>=60)return ['Standard','Plain, accessible language'];
- if(score>=50)return ['Fairly difficult','May need a slower read'];
- if(score>=30)return ['Difficult','Consider simplifying selected passages'];
- return ['Very difficult','Dense text; review sentence structure'];
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function updateCount(){const t=input.value; $('counts').textContent=`${wordsOf(t).length.toLocaleString()} words · ${sentencesOf(t).length} sentences`;}
-input.addEventListener('input',updateCount);
-$('sample').addEventListener('click',()=>{input.value=sample;updateCount();runAnalysis()});
-$('analyze').addEventListener('click',runAnalysis);
-function runAnalysis(){
- const text=input.value.trim(), words=wordsOf(text), sents=sentencesOf(text);
- if(!words.length||!sents.length){$('status').textContent='Add some text';$('results').innerHTML='<div class="empty"><div class="empty-inner"><div class="empty-icon">✎</div><h3>Ready when you are</h3><p>Paste a word, sentence, or chapter to get a readability estimate.</p></div></div>';return}
- const score=Math.max(0,Math.min(100,Math.round(flesch(words,sents))));
- const grade=Math.max(0,gradeLevel(words,sents));
- const [band,desc]=level(score);
- const reliability=words.length<20||sents.length<2?'Short-text estimate · add more writing for a steadier result':'Based on the Flesch Reading Ease formula';
- const hard=sents.map(complexity).sort((a,b)=>b.score-a.score).slice(0,5);
- const selected=new Set(hard.map(x=>x.sentence));
- const highlighted=sents.map(s=>selected.has(s)?`<mark>${escapeHtml(s)}</mark>`:escapeHtml(s)).join(' ');
- $('status').textContent='Analysis complete';
- $('results').innerHTML=`
- <div class="stats">
-  <div class="stat"><div class="stat-label">Reading ease</div><div class="stat-value">${score}<span style="font-size:13px;color:#667085">/100</span></div><div class="meter"><span style="width:${score}%"></span></div><div class="stat-note">Higher usually means easier</div></div>
-  <div class="stat"><div class="stat-label">Estimated grade</div><div class="stat-value">${grade.toFixed(1)}</div><div class="stat-note">Approximate US school grade</div></div>
- </div>
- <div class="band">${band} · ${desc}</div>
- <div class="section-title"><span>Five sentences to review</span><span class="subtle">Ranked by estimated complexity</span></div>
- <div class="sentence-list">${hard.map((x,i)=>`<article class="sentence"><div class="sentence-top"><span class="sentence-num">Sentence ${sents.indexOf(x.sentence)+1}</span><span class="sentence-score">Complexity ${x.score}</span></div><p>${escapeHtml(x.sentence)}</p><small>${x.reasons.join(' · ')}</small></article>`).join('')}</div>
- <div class="preview"><div class="section-title"><span>Chapter view</span><span class="subtle">Highlighted = review</span></div><div class="preview-box">${highlighted}</div></div>
- <p class="note">${reliability}. This is a local heuristic, not an AI editor. Readability formulas can miss tone, genre, dialogue, and intentional stylistic choices. The “hardest” ranking is an estimate based on length, long words, clause signals, punctuation, and possible passive phrasing.</p>`;
-}
-updateCount();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
