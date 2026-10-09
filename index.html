@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter Clarity — Readability checker</title>
+<meta name="description" content="A free, private chapter readability checker that highlights five sentences worth revising.">
+<style>
+:root{--ink:#1d2939;--muted:#667085;--paper:#f8f7f3;--card:#fff;--line:#e5e7eb;--accent:#176b57;--accent2:#e5f4ee;--warm:#fff1d8;--shadow:0 18px 55px rgba(26,40,34,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+header{max-width:1120px;margin:auto;padding:26px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.04em;font-size:20px}.mark{width:34px;height:34px;border-radius:11px;background:var(--accent);color:white;display:grid;place-items:center;font-family:Georgia,serif;font-size:20px}
+.pill{font-size:12px;font-weight:700;border:1px solid #d8e6df;border-radius:99px;padding:7px 11px;color:var(--accent);background:#fff}
+main{max-width:1120px;margin:0 auto;padding:20px 24px 70px}.hero{max-width:760px;margin:20px auto 32px;text-align:center}.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.16em;font-weight:800}.hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.055em;line-height:1.04;font-size:clamp(40px,6vw,66px);margin:15px 0}.hero p{color:var(--muted);font-size:17px;margin:0 auto;max-width:610px}
+.workspace{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:19px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.panel-head h2{font-size:15px;margin:0;letter-spacing:-.02em}.subtle{font-size:12px;color:var(--muted)}.editor-wrap{padding:18px 20px 20px}
+textarea{width:100%;min-height:350px;resize:vertical;border:0;outline:none;font:16px/1.85 Georgia,"Times New Roman",serif;color:#26352f;background:transparent}textarea::placeholder{color:#a4aaa7}.editor-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:14px;margin-top:12px}.count{font-size:12px;color:var(--muted)}
+button{border:0;border-radius:11px;background:var(--accent);color:white;padding:12px 17px;font-weight:750;font-size:13px;cursor:pointer;transition:transform .15s,opacity .15s}button:hover{transform:translateY(-1px)}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#f2f4f3;color:var(--ink);border:1px solid var(--line)}
+.results{padding:20px}.empty{min-height:390px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);padding:28px}.empty-inner{max-width:260px}.empty-icon{font-size:34px;margin-bottom:10px}.empty h3{color:var(--ink);font-size:17px;margin:0 0 7px}.empty p{font-size:13px;margin:0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:17px}.stat{border:1px solid var(--line);border-radius:15px;padding:15px;background:#fff}.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:750}.stat-value{font-size:30px;font-weight:800;letter-spacing:-.05em;margin-top:5px}.stat-note{font-size:11px;color:var(--muted)}
+.meter{height:7px;background:#edf0ed;border-radius:10px;margin-top:9px;overflow:hidden}.meter span{height:100%;display:block;width:0;background:var(--accent);border-radius:10px}
+.band{font-size:12px;font-weight:750;background:var(--accent2);color:var(--accent);padding:7px 10px;border-radius:9px;display:inline-block;margin-bottom:18px}
+.section-title{font-size:13px;font-weight:800;margin:2px 0 10px;display:flex;justify-content:space-between}.sentence-list{display:flex;flex-direction:column;gap:9px}.sentence{padding:12px 13px;border:1px solid #f0dfba;background:#fffaf0;border-radius:12px}.sentence-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:5px}.sentence-num{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#946319}.sentence-score{font-size:10px;color:#946319;background:#ffefc9;border-radius:20px;padding:3px 7px;white-space:nowrap}.sentence p{font:14px/1.6 Georgia,"Times New Roman",serif;margin:0}.sentence small{display:block;color:#8a6a35;font-size:11px;margin-top:6px}
+.preview{margin-top:20px}.preview-box{padding:17px;border:1px solid var(--line);border-radius:14px;background:#fcfcfa;font:15px/1.9 Georgia,"Times New Roman",serif;white-space:pre-wrap;overflow-wrap:anywhere}.preview-box mark{background:#ffe3a3;color:#4d3410;border-radius:3px;padding:1px 0}
+.note{font-size:11px;color:var(--muted);margin:13px 2px 0}.bottom{margin-top:24px;text-align:center;font-size:12px;color:var(--muted)}.bottom strong{color:var(--accent)}
+@media(max-width:780px){.workspace{grid-template-columns:1fr}.hero{margin-top:10px}.editor-wrap textarea{min-height:260px}.empty{min-height:220px}header{padding:20px}.pill{display:none}}
+</style>
+</head>
+<body>
+<header><div class="brand"><span class="mark">C</span> chapter clarity</div><span class="pill">Free · Private · No sign-up</span></header>
+<main>
+<section class="hero"><div class="eyebrow">A kinder first edit</div><h1>Make every sentence<br>earn its place.</h1><p>Paste a chapter to get a quick readability check and spot five sentences your readers may need to work hardest to get through.</p></section>
+<section class="workspace">
+<div class="panel">
+ <div class="panel-head"><h2>01 / Your chapter</h2><span class="subtle">Your text stays in this browser</span></div>
+ <div class="editor-wrap">
+ <textarea id="chapter" aria-label="Paste your chapter" placeholder="Paste a chapter or a few paragraphs here…&#10;&#10;Tip: a few hundred words gives a more useful estimate."></textarea>
+ <div class="editor-footer"><span id="counts" class="count">0 words · 0 sentences</span><div style="display:flex;gap:8px"><button class="secondary" id="sample">Try sample</button><button id="analyze">Check readability ↗</button></div></div>
+ </div>
+</div>
+<div class="panel">
+ <div class="panel-head"><h2>02 / Readability report</h2><span class="subtle" id="status">Waiting for text</span></div>
+ <div class="results" id="results"><div class="empty"><div class="empty-inner"><div class="empty-icon">✳</div><h3>Your chapter, made clearer</h3><p>Your score and five most demanding sentences will appear here after you run the check.</p></div></div></div>
+</div>
+</section>
+<div class="bottom">Built for writers, not algorithms. <strong>Use the score as a signal, not a rule.</strong></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const input = $('chapter');
+const sample = `Mara had always believed that the house remembered everything. The staircase creaked in the same place where her father had paused to listen for the storm, and the kitchen window still refused to close unless someone lifted it with both hands. On the morning she decided to leave, the sky was the colour of old paper.
+
+Although she had rehearsed the conversation dozens of times, she found herself unable to explain why the decision, which had seemed perfectly reasonable in the quiet of her bedroom, became almost impossible to articulate when her brother finally appeared in the doorway. He looked at the suitcase, then at her, and waited.
+
+“I'll write,” she said.
+
+It was not a promise either of them believed. Outside, a bus sighed at the corner, releasing a handful of passengers into the rain. Mara picked up the key, considered the weight of it in her palm, and placed it carefully on the table beside the untouched cup of tea.`;
+function sentencesOf(text){
+  return (text.replace(/\s+/g,' ').match(/[^.!?]+[.!?]+["'”’)]*|[^.!?]+$/g)||[]).map(s=>s.trim()).filter(Boolean);
+}
+function wordsOf(text){return text.match(/\b[\w’'-]+\b/g)||[]}
+function syllables(word){
+  let w=word.toLowerCase().replace(/[^a-z]/g,''); if(!w) return 1;
+  if(w.length<=3) return 1;
+  w=w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'').replace(/^y/,'');
+  const m=w.match(/[aeiouy]{1,2}/g); return Math.max(1,m?m.length:1);
+}
+function countSyllables(words){return words.reduce((n,w)=>n+syllables(w),0)}
+function flesch(words,sentences){
+  if(!words.length||!sentences.length)return null;
+  const syll=countSyllables(words);
+  return 206.835-1.015*(words.length/sentences.length)-84.6*(syll/words.length);
+}
+function gradeLevel(words,sentences){
+ if(!words.length||!sentences.length)return null;
+ return 0.39*(words.length/sentences.length)+11.8*(countSyllables(words)/words.length)-15.59;
+}
+function complexity(sentence){
+ const words=wordsOf(sentence), n=Math.max(words.length,1), syll=countSyllables(words);
+ const long=words.filter(w=>syllables(w)>=3).length;
+ const connectors=(sentence.match(/\b(although|because|while|whereas|which|that|who|whom|whose|unless|until|despite|therefore|however|nevertheless|if|when|whenever|since|after|before|as though|even though)\b/gi)||[]).length;
+ const punctuation=(sentence.match(/[;:—–(),]/g)||[]).length;
+ const passive=(sentence.match(/\b(am|is|are|was|were|be|been|being)\s+\w+(ed|en)\b/gi)||[]).length;
+ const score=Math.round((n*0.55)+(long*2.4)+(connectors*2.8)+(punctuation*0.8)+(passive*1.6));
+ const reasons=[];
+ if(n>=24) reasons.push(`${n} words`);
+ if(long>=3) reasons.push(`${long} long words`);
+ if(connectors>=2) reasons.push(`${connectors} linking clauses`);
+ if(punctuation>=3) reasons.push('dense punctuation');
+ if(passive) reasons.push('possible passive phrasing');
+ return {sentence,score,words:n,reasons:reasons.length?reasons:['overall sentence structure']};
+}
+function level(score){
+ if(score>=80)return ['Easy','Generally easy to read'];
+ if(score>=60)return ['Fairly easy','Comfortable for many adult readers'];
+ if(score>=50)return ['Fairly difficult','May need a slower read'];
+ if(score>=30)return ['Difficult','Consider simplifying selected passages'];
+ return ['Very difficult','Dense text; review sentence structure'];
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function updateCount(){const t=input.value; $('counts').textContent=`${wordsOf(t).length.toLocaleString()} words · ${sentencesOf(t).length} sentences`;}
+input.addEventListener('input',updateCount);
+$('sample').addEventListener('click',()=>{input.value=sample;updateCount();runAnalysis()});
+$('analyze').addEventListener('click',runAnalysis);
+function runAnalysis(){
+ const text=input.value.trim(), words=wordsOf(text), sents=sentencesOf(text);
+ if(words.length<10||sents.length<2){$('status').textContent='Add a little more text';$('results').innerHTML='<div class="empty"><div class="empty-inner"><div class="empty-icon">✎</div><h3>Need a little more text</h3><p>Paste at least 10 words across two or more sentences for a more useful estimate.</p></div></div>';return}
+ const score=Math.max(0,Math.min(100,Math.round(flesch(words,sents))));
+ const grade=Math.max(0,gradeLevel(words,sents));
+ const [band,desc]=level(score);
+ const hard=sents.map(complexity).sort((a,b)=>b.score-a.score).slice(0,5);
+ const selected=new Set(hard.map(x=>x.sentence));
+ const highlighted=sents.map(s=>selected.has(s)?`<mark>${escapeHtml(s)}</mark>`:escapeHtml(s)).join(' ');
+ $('status').textContent='Analysis complete';
+ $('results').innerHTML=`
+ <div class="stats">
+  <div class="stat"><div class="stat-label">Reading ease</div><div class="stat-value">${score}<span style="font-size:13px;color:#667085">/100</span></div><div class="meter"><span style="width:${score}%"></span></div><div class="stat-note">Higher usually means easier</div></div>
+  <div class="stat"><div class="stat-label">Estimated grade</div><div class="stat-value">${grade.toFixed(1)}</div><div class="stat-note">Approximate US school grade</div></div>
+ </div>
+ <div class="band">${band} · ${desc}</div>
+ <div class="section-title"><span>Five sentences to review</span><span class="subtle">Ranked by estimated complexity</span></div>
+ <div class="sentence-list">${hard.map((x,i)=>`<article class="sentence"><div class="sentence-top"><span class="sentence-num">Sentence ${sents.indexOf(x.sentence)+1}</span><span class="sentence-score">Complexity ${x.score}</span></div><p>${escapeHtml(x.sentence)}</p><small>${x.reasons.join(' · ')}</small></article>`).join('')}</div>
+ <div class="preview"><div class="section-title"><span>Chapter view</span><span class="subtle">Highlighted = review</span></div><div class="preview-box">${highlighted}</div></div>
+ <p class="note">This is a local heuristic, not an AI editor. Readability formulas can miss tone, genre, dialogue, and intentional stylistic choices. The “hardest” ranking is an estimate based on length, long words, clause signals, punctuation, and possible passive phrasing.</p>`;
+}
+updateCount();
+</script>
+</body>
+</html>
